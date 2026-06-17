@@ -1,11 +1,15 @@
 package com.iTech.accountservice.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.iTech.accountservice.client.NotificationService;
+import com.iTech.accountservice.client.StatisticService;
 import com.iTech.accountservice.dto.AccountDTO;
+import com.iTech.accountservice.dto.MessageDTO;
+import com.iTech.accountservice.dto.StatisticDTO;
 import com.iTech.accountservice.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,13 +24,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountController {
 
-    @Autowired
-    private AccountService accountService;
+
+    private final AccountService accountService;
+    private final NotificationService notificationService;
+    private final StatisticService statisticService;
+    public AccountController(AccountService accountService,NotificationService notificationService,StatisticService statisticService){
+        this.accountService = accountService;
+        this.notificationService = notificationService;
+        this.statisticService = statisticService;
+    }
 
     // add new
     @PostMapping("/account")
     public AccountDTO addAccount(@RequestBody AccountDTO accountDTO) {
         accountService.add(accountDTO);
+        //
+        statisticService.add(new StatisticDTO("Hello 1",new Date()));
+        //
+        MessageDTO msg = new MessageDTO();
+        msg.setFrom("nduytin13112005@gmail.com");
+        msg.setTo(accountDTO.getUsername());
+        msg.setToName(accountDTO.getName());
+        msg.setContent("This is test email from duytin-dev while he study about microservice !!");
+        msg.setSubject("Hi " + accountDTO.getName() + " !");
+        notificationService.sendNotification(msg);
         return accountDTO;
     }
 
