@@ -1,17 +1,12 @@
-package com.iTech.accountservice.dto;
+package com.iTech.statisticservice.dto;
 
 import java.util.Date;
 
-import lombok.*;
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@RequiredArgsConstructor
-@NoArgsConstructor
 public class StatisticDTO {
     private Long id;
-    @NonNull
     private String message;
-    @NonNull
     private Date createdDate;
 }
